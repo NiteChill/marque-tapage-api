@@ -1,16 +1,25 @@
-import { Request, Response, NextFunction } from "express";
-import { getUserByUsername } from "../services/users.service";
-import { User } from "../models/users.model";
-import { isUser } from "../utils/users.utils";
-import bcrypt from "bcrypt";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const { username, password } = req.body;
-  const user: User | unknown = getUserByUsername(username);
-  if (!isUser(user)) return res.status(401).json({ message: "Invalid username or password" });
-  bcrypt.compare(password, user.password_hash, (err, result) => {
-    if (err) return res.status(500).json({ message: "Internal server error" });
-    if (!result) return res.status(401).json({ message: "Invalid username or password" });
-    next();
-  });
+const JWT_SECRET = process.env.JWT_SECRET;
+export interface AuthRequest extends Request {
+	user?: any;
+}
+
+export const authToken = (
+	req: AuthRequest,
+	res: Response,
+	next: NextFunction
+) => {
+	const token = req.headers.authorization?.split(' ')[1];
+	if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+	if (!JWT_SECRET)
+		return res.status(500).json({ error: 'Internal Server Error' });
+
+	jwt.verify(token, JWT_SECRET, (err, user) => {
+		if (err) return res.status(401).json({ error: 'Invalid or expired token' });
+		req.user = user;
+		next();
+	});
 };
