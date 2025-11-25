@@ -1,4 +1,6 @@
 import { News, NewsDto } from '../models/news.model';
+import { AppError } from './errors';
+import { isRecord } from './utils';
 
 /**
  * Check if the given object is a News
@@ -34,4 +36,21 @@ export const isNewsDto = (news: any): news is NewsDto => {
 		typeof (news as NewsDto).title === 'string' &&
 		typeof (news as NewsDto).content === 'string'
 	);
+};
+
+/**
+ * Parse the given object to a NewsDto
+ * @param   {unknown} body The object to parse
+ * @returns {NewsDto} The parsed object
+ */
+export const parseNewsBody = (body: unknown): NewsDto => {
+	if (!isRecord(body)) throw new AppError('Invalid news', 400);
+	const { title, content } = body;
+	if (typeof title !== 'string' || typeof content !== 'string')
+		throw new AppError('Invalid news', 400);
+	return {
+		title,
+		content,
+		cover_image: '',
+	};
 };

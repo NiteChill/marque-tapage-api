@@ -8,7 +8,7 @@ import {
 	getNewsByCategory,
 } from '../services/news.service';
 import { News } from '../models/news.model';
-import { isNews, isNewsDto } from '../utils/news.utils';
+import { isNewsDto, parseNewsBody } from '../utils/news.utils';
 import { authToken } from '../middleware/auth.middleware';
 import { AppError } from '../utils/errors';
 
@@ -20,18 +20,14 @@ newsController.get('/', (req: Request, res: Response) => {
 	if (isNaN(limit)) limit = 0;
 	if (isNaN(page)) page = 0;
 	const news: News[] = getNews(limit, page);
-	for (const el of news)
-		if (!isNews(el)) throw new AppError('News not found', 500);
 	res.json(news);
 });
 
 newsController.get('/:id', (req: Request, res: Response) => {
-	if (!req.params.id) throw new AppError('Invalid ID', 400);
 	const id = Number(req.params.id);
 	if (isNaN(id) || id <= 0) throw new AppError('Invalid ID', 400);
 	const news: News | undefined = getNewsById(id);
-	if (!news) throw new AppError('News not found', 500);
-	if (!isNews(news)) throw new AppError('News not found', 500);
+	if (!news) throw new AppError('News not found', 404);
 	res.json(news);
 });
 
@@ -44,17 +40,14 @@ newsController.get('/categories/:categories', (req: Request, res: Response) => {
 	if (categories.length === 0)
 		throw new AppError('No valid categories provided', 400);
 	const news: News[] = getNewsByCategory(categories);
-	if (!news) throw new AppError('News not found', 500);
-	for (const el of news)
-		if (!isNews(el)) throw new AppError('News not found', 500);
 	res.json(news);
 });
 
 newsController.post('/', authToken, (req: Request, res: Response) => {
-	if (!isNewsDto(req.body)) throw new AppError('Invalid news', 400);
-	const news: News | undefined = createNews(req.body);
+	const payload = parseNewsBody(req.body);
+	if (!isNewsDto(payload)) throw new AppError('Invalid news', 400);
+	const news: News | undefined = createNews(payload);
 	if (!news) throw new AppError('News not created', 500);
-	if (!isNews(news)) throw new AppError('News not created', 500);
 	res.json(news);
 });
 
@@ -62,10 +55,10 @@ newsController.put('/:id', authToken, (req: Request, res: Response) => {
 	if (!req.params.id) throw new AppError('Invalid ID', 400);
 	const id = Number(req.params.id);
 	if (isNaN(id) || id <= 0) throw new AppError('Invalid ID', 400);
-	if (!isNewsDto(req.body)) throw new AppError('Invalid news', 400);
-	const news: News | undefined = updateNews({ id, ...req.body });
+	const payload = parseNewsBody(req.body);
+	if (!isNewsDto(payload)) throw new AppError('Invalid news', 400);
+	const news: News | undefined = updateNews({ id, ...payload });
 	if (!news) throw new AppError('News not updated', 500);
-	if (!isNews(news)) throw new AppError('News not updated', 500);
 	res.json(news);
 });
 
