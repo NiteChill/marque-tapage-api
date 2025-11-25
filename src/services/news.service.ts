@@ -1,5 +1,5 @@
 import db from '../db/database';
-import { newNews, News } from '../models/news.model';
+import { NewsDto, News } from '../models/news.model';
 
 export const getNews = (): News[] => {
 	return db.prepare('SELECT * FROM news').all() as News[];
@@ -24,7 +24,7 @@ export const getNewsByCategory = (category: string): News[] => {
 		.all(category) as News[];
 };
 
-export const createNews = (news: newNews): News | undefined => {
+export const createNews = (news: NewsDto): News | undefined => {
 	return db
 		.prepare('INSERT INTO news (title, content) VALUES (?, ?) RETURNING *')
 		.get(news.title, news.content) as News | undefined;

@@ -28,7 +28,7 @@ authController.post('/login', async (req: Request, res: Response) => {
 			return res.status(500).json({ error: 'Internal Server Error' });
 		}
 
-    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+		const passwordMatch = await bcrypt.compare(password, user.password_hash);
 		if (!passwordMatch)
 			return res.status(401).json({ error: 'Invalid username or password' });
 
