@@ -1,8 +1,5 @@
-import express, { Request, Response } from "express";
-import dotenv from "dotenv";
+import express from "express";
 import { authController } from "./controllers/auth.controller";
-
-dotenv.config();
 
 export const app = express();
 app.use(express.json());

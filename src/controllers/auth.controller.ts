@@ -4,9 +4,6 @@ import { getUserByUsername } from '../services/users.service';
 import bcrypt from 'bcrypt';
 import { isUser } from '../utils/users.utils';
 import { User } from '../models/users.model';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
