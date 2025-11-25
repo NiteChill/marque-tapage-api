@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import { authController } from "./controllers/auth.controller";
 
 dotenv.config();
 
@@ -8,4 +9,4 @@ app.use(express.json());
 
 // app.use('/news',);
 // app.use('/favorites',);
-// app.use('/auth',);
+app.use('/auth', authController);
