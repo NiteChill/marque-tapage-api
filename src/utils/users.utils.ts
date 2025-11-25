@@ -1,5 +1,10 @@
 import { User } from '../models/users.model';
 
+/**
+ * Check if the given object is a User
+ * @param   {unknown} user The object to check
+ * @returns {boolean} true if the object is a User, false otherwise
+ */
 export const isUser = (user: unknown): user is User => {
 	return (
 		user !== null &&

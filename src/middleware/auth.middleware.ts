@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { AppError } from '../utils/errors';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 export interface AuthRequest extends Request {
@@ -8,10 +9,10 @@ export interface AuthRequest extends Request {
 
 /**
  * Auth middleware
- * @param   {AuthRequest}  req  The request object
- * @param   {Response}     res  The response object
- * @param   {NextFunction} next The next function
- * @returns {void | Response}   Continues if the token is valid, otherwise returns an error
+ * @param   {AuthRequest}     req  The request object
+ * @param   {Response}        res  The response object
+ * @param   {NextFunction}    next The next function
+ * @returns {void | Response} Continues if the token is valid, otherwise returns an error
  */
 export const authToken = (
 	req: AuthRequest,
@@ -19,15 +20,15 @@ export const authToken = (
 	next: NextFunction
 ) => {
 	const token = req.headers.authorization?.split(' ')[1];
-	if (!token) return res.status(401).json({ error: 'Unauthorized' });
+	if (!token) throw new AppError('Unauthorized', 401);
 
 	if (!JWT_SECRET) {
 		console.error('FATAL: JWT_SECRET is not defined in .env');
-		return res.status(500).json({ error: 'Internal Server Error' });
+		throw new AppError('Internal Server Error', 500);
 	}
 
 	jwt.verify(token, JWT_SECRET, (err, user) => {
-		if (err) return res.status(401).json({ error: 'Invalid or expired token' });
+		if (err) throw new AppError('Invalid or expired token', 401);
 		req.user = user;
 		next();
 	});
