@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getUserByUsername } from "../services/users.services";
+import { getUserByUsername } from "../services/users.service";
 import { User } from "../models/users.model";
 import { isUser } from "../utils/users.utils";
 import bcrypt from "bcrypt";

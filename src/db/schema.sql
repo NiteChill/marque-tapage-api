@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS favorites_favorites_categories (
 
 -- ... users table insertion ...
 INSERT INTO users (username, password_hash) VALUES
-('Laurence', '$2a$12$Qr7NQmTQmJJP7hCrUHm41.BsWSB5S5S8GGwThKe.brYsebMeduXqW'); -- pw : Odilou 09 | rounds : 12
+('Admin', '$2a$12$Qr7NQmTQmJJP7hCrUHm41.BsWSB5S5S8GGwThKe.brYsebMeduXqW'); -- pw : Odilou 09 | rounds : 12
 
 -- ... news_categories table insertion ...
 INSERT INTO news_categories (label) VALUES
