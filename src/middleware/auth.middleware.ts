@@ -6,6 +6,13 @@ export interface AuthRequest extends Request {
 	user?: any;
 }
 
+/**
+ * Auth middleware
+ * @param   {AuthRequest}  req  The request object
+ * @param   {Response}     res  The response object
+ * @param   {NextFunction} next The next function
+ * @returns {void | Response}   Continues if the token is valid, otherwise returns an error
+ */
 export const authToken = (
 	req: AuthRequest,
 	res: Response,
