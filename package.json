@@ -1,0 +1,37 @@
+{
+  "dependencies": {
+    "better-sqlite3": "^12.4.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  },
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsx build",
+    "db": "tsx src/db/db-setup.ts",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NiteChill/marque-tapage-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/NiteChill/marque-tapage-api/issues"
+  },
+  "homepage": "https://github.com/NiteChill/marque-tapage-api#readme",
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
