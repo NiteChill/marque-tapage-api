@@ -1,3 +1,7 @@
 node_modules
 .env
 http
+*.db
+*.db-wal
+*.db-shm
+dummy-data.sql
