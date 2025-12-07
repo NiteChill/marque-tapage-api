@@ -9,3 +9,7 @@ export interface News {
 export interface NewsDto extends Omit<News, 'id' | 'created_at'> {
 	id?: number;
 }
+
+export interface NewNewsDto extends Omit<NewsDto, 'cover_image'> {
+	cover_image?: string;
+}

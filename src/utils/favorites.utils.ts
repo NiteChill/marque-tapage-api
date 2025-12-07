@@ -1,4 +1,4 @@
-import { Favorite, FavoriteDto } from '../models/favorites.model';
+import { Favorite, FavoriteDto, NewFavoriteDto } from '../models/favorites.model';
 import { AppError } from './errors';
 import { isRecord } from './utils';
 
@@ -47,15 +47,14 @@ export const isFavoriteDto = (favorite: unknown): favorite is FavoriteDto => {
 /**
  * Parse the given object to a FavoriteDto
  * @param   {unknown}     body The object to parse
- * @returns {FavoriteDto} The parsed object
+ * @returns {NewFavoriteDto} The parsed object
  */
-export const parseFavoriteBody = (body: unknown): FavoriteDto => {
+export const parseFavoriteBody = (body: unknown): NewFavoriteDto => {
 	if (!isRecord(body)) throw new AppError('Invalid favorite', 400);
-	const { title, author, cover_image, description, price, note } = body;
+	const { title, author, description, price, note } = body;
 	if (
 		typeof title !== 'string' ||
 		typeof author !== 'string' ||
-		typeof cover_image !== 'string' ||
 		typeof description !== 'string' ||
 		typeof price !== 'string' ||
 		typeof note !== 'string'
@@ -69,7 +68,6 @@ export const parseFavoriteBody = (body: unknown): FavoriteDto => {
 	return {
 		title,
 		author,
-		cover_image,
 		description,
 		price: parsedPrice,
 		note: parsedNote,

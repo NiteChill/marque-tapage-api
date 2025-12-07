@@ -10,6 +10,7 @@ import {
 import { isFavoriteDto, parseFavoriteBody } from '../utils/favorites.utils';
 import { AppError } from '../utils/errors';
 import { authToken } from '../middleware/auth.middleware';
+import { upload } from '../multer.config';
 
 export const favoritesController = Router();
 
@@ -45,19 +46,21 @@ favoritesController.get(
 	}
 );
 
-favoritesController.post('/', authToken, (req: Request, res: Response) => {
+favoritesController.post('/', authToken, upload.single('cover_image'), (req: Request, res: Response) => {
 	const payload = parseFavoriteBody(req.body);
+	if (req.file && req.file?.path) payload.cover_image = req.file.path;
 	if (!isFavoriteDto(payload)) throw new AppError('Invalid favorite', 400);
 	const favorite = createFavorite(payload);
 	if (!favorite) throw new AppError('Favorite not created', 500);
 	res.json(favorite);
 });
 
-favoritesController.put('/:id', authToken, (req: Request, res: Response) => {
+favoritesController.put('/:id', authToken, upload.single('cover_image'), (req: Request, res: Response) => {
 	if (!req.params.id) throw new AppError('Invalid favorite id', 400);
 	const id = Number(req.params.id);
 	if (isNaN(id) || id <= 0) throw new AppError('Invalid ID', 400);
 	const payload = parseFavoriteBody(req.body);
+	if (req.file && req.file?.path) payload.cover_image = req.file.path;
 	if (!isFavoriteDto(payload)) throw new AppError('Invalid favorite', 400);
 	const favorite = updateFavorite({ ...payload, id });
 	if (!favorite) throw new AppError('Favorite not found', 404);

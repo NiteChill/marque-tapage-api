@@ -11,6 +11,7 @@ import { News } from '../models/news.model';
 import { isNewsDto, parseNewsBody } from '../utils/news.utils';
 import { authToken } from '../middleware/auth.middleware';
 import { AppError } from '../utils/errors';
+import { upload } from '../multer.config';
 
 export const newsController = Router();
 
@@ -43,8 +44,9 @@ newsController.get('/categories/:categories', (req: Request, res: Response) => {
 	res.json(news);
 });
 
-newsController.post('/', authToken, (req: Request, res: Response) => {
+newsController.post('/', authToken, upload.single('cover_image'), (req: Request, res: Response) => {
 	const payload = parseNewsBody(req.body);
+	if (req.file && req.file?.path) payload.cover_image = req.file.path;
 	if (!isNewsDto(payload)) throw new AppError('Invalid news', 400);
 	const news: News | undefined = createNews(payload);
 	if (!news) throw new AppError('News not created', 500);

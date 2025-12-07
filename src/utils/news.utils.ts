@@ -1,4 +1,4 @@
-import { News, NewsDto } from '../models/news.model';
+import { NewNewsDto, News, NewsDto } from '../models/news.model';
 import { AppError } from './errors';
 import { isRecord } from './utils';
 
@@ -14,10 +14,12 @@ export const isNews = (news: unknown): news is News => {
 		'id' in news &&
 		'title' in news &&
 		'content' in news &&
+		'cover_image' in news &&
 		'created_at' in news &&
 		typeof (news as News).id === 'number' &&
 		typeof (news as News).title === 'string' &&
 		typeof (news as News).content === 'string' &&
+		typeof (news as News).cover_image === 'string' &&
 		typeof (news as News).created_at === 'string'
 	);
 };
@@ -33,8 +35,10 @@ export const isNewsDto = (news: any): news is NewsDto => {
 		typeof news === 'object' &&
 		'title' in news &&
 		'content' in news &&
+		'cover_image' in news &&
 		typeof (news as NewsDto).title === 'string' &&
-		typeof (news as NewsDto).content === 'string'
+		typeof (news as NewsDto).content === 'string' &&
+		typeof (news as NewsDto).cover_image === 'string'
 	);
 };
 
@@ -43,7 +47,7 @@ export const isNewsDto = (news: any): news is NewsDto => {
  * @param   {unknown} body The object to parse
  * @returns {NewsDto} The parsed object
  */
-export const parseNewsBody = (body: unknown): NewsDto => {
+export const parseNewsBody = (body: unknown): NewNewsDto => {
 	if (!isRecord(body)) throw new AppError('Invalid news', 400);
 	const { title, content } = body;
 	if (typeof title !== 'string' || typeof content !== 'string')
@@ -51,6 +55,5 @@ export const parseNewsBody = (body: unknown): NewsDto => {
 	return {
 		title,
 		content,
-		cover_image: '',
 	};
 };

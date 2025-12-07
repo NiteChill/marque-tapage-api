@@ -12,3 +12,7 @@ export interface Favorite {
 export interface FavoriteDto extends Omit<Favorite, 'id' | 'created_at'> {
 	id?: number;
 }
+
+export interface NewFavoriteDto extends Omit<FavoriteDto, 'cover_image'> {
+	cover_image?: string;
+}
