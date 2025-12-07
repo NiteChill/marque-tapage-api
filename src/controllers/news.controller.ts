@@ -53,11 +53,12 @@ newsController.post('/', authToken, upload.single('cover_image'), (req: Request,
 	res.json(news);
 });
 
-newsController.put('/:id', authToken, (req: Request, res: Response) => {
+newsController.put('/:id', authToken, upload.single('cover_image'), (req: Request, res: Response) => {
 	if (!req.params.id) throw new AppError('Invalid ID', 400);
 	const id = Number(req.params.id);
 	if (isNaN(id) || id <= 0) throw new AppError('Invalid ID', 400);
 	const payload = parseNewsBody(req.body);
+	if (req.file && req.file?.path) payload.cover_image = req.file.path;
 	if (!isNewsDto(payload)) throw new AppError('Invalid news', 400);
 	const news: News | undefined = updateNews({ id, ...payload });
 	if (!news) throw new AppError('News not updated', 500);
